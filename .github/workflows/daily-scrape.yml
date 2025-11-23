@@ -1,0 +1,49 @@
+name: SubSeek Daily Scraper
+
+on:
+  schedule:
+    # 每天 UTC 0 点（北京时间 8 点）运行一次
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run scraper
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          HUNTER_API_KEY: ${{ secrets.HUNTER_API_KEY }}
+          QUAKE_API_KEY: ${{ secrets.QUAKE_API_KEY }}
+        run: python main.py
+
+      - name: Commit updated subscription files
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/sub.txt data/sub_base64.txt || true
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git commit -m "chore: update subscriptions [skip ci]"
+          git push

@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  subseek:
+    build: .
+    container_name: subseek
+    environment:
+      - GH_TOKEN=${GH_TOKEN}
+      - HUNTER_API_KEY=${HUNTER_API_KEY}
+      - QUAKE_API_KEY=${QUAKE_API_KEY}
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
