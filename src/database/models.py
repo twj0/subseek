@@ -7,7 +7,12 @@ from config.settings import DB_PATH
 Base = declarative_base()
 
 class ProxyNode(Base):
-    __tablename__ = 'proxy_nodes'
+
+    """
+    代理节点模型类，用于存储代理服务器的相关信息
+    继承自Base类，表明这是一个SQLAlchemy的ORM模型
+    """
+    __tablename__ = 'proxy_nodes'  # 指定数据库表名为'proxy_nodes'
 
     id = Column(Integer, primary_key=True)
     protocol = Column(String(20))

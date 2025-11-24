@@ -16,11 +16,26 @@ def parse_content(text):
         r'(vmess://[a-zA-Z0-9+/=]+)',
         r'(vless://[a-zA-Z0-9\-\._~:/?#\[\]@!$&\'()*+,;=%]+)',
         r'(ss://[a-zA-Z0-9\-\._~:/?#\[\]@!$&\'()*+,;=%]+)',
-        r'(trojan://[a-zA-Z0-9\-\._~:/?#\[\]@!$&\'()*+,;=%]+)'
+        r'(trojan://[a-zA-Z0-9\-\._~:/?#\[\]@!$&\'()*+,;=%]+)',
+        r'(ssr://[a-zA-Z0-9\-\._~:/?#\[\]@!$&\'()*+,;=%]+)',
+        r'(socks5://[a-zA-Z0-9\-\._~:/?#\[\]@!$&\'()*+,;=%]+)',
+        r'(socks://[a-zA-Z0-9\-\._~:/?#\[\]@!$&\'()*+,;=%]+)',
+        r'(hysteria://[a-zA-Z0-9\-\._~:/?#\[\]@!$&\'()*+,;=%]+)',
+        r'(hy2://[a-zA-Z0-9\-\._~:/?#\[\]@!$&\'()*+,;=%]+)',
+        r'(tuic://[a-zA-Z0-9\-\._~:/?#\[\]@!$&\'()*+,;=%]+)',
+        r'(wireguard://[a-zA-Z0-9\-\._~:/?#\[\]@!$&\'()*+,;=%]+)',
     ]
 
     for pattern in patterns:
         found = re.findall(pattern, text)
         links.extend(found)
 
-    return links
+    unique_links = []
+    seen = set()
+    for link in links:
+        if link in seen:
+            continue
+        seen.add(link)
+        unique_links.append(link)
+
+    return unique_links
