@@ -53,7 +53,10 @@ def _extract_host_port(link):
         except Exception:
             return None, None
 
-    parsed = urlparse(link)
+    try:
+        parsed = urlparse(link)
+    except ValueError:
+        return None, None
     host = parsed.hostname
     try:
         port = parsed.port
