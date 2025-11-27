@@ -9,12 +9,25 @@ GITHUB_TOKEN = os.environ.get("GH_TOKEN", "")
 GITHUB_PROTOCOL_TERMS = [
     "v2ray",
     "clash",
+<<<<<<< HEAD
+=======
+    "vmess",
+    "vless",
+    "trojan",
+    "ss",
+    "ssr",
+>>>>>>> 3eb4acf7275e6e8f4e8ca98412db802b01e0bf38
 ]
 
 # GitHub搜索中使用的上下文相关术语
 GITHUB_CONTEXT_TERMS = [
     "free",
+<<<<<<< HEAD
     "node",
+=======
+    "subscribe",
+    "nodes",
+>>>>>>> 3eb4acf7275e6e8f4e8ca98412db802b01e0bf38
     "proxy",
 ]
 
@@ -22,8 +35,12 @@ GITHUB_CONTEXT_TERMS = [
 GITHUB_EXTRA_TERMS = []
 
 # GitHub搜索关键词的最大数量限制
+<<<<<<< HEAD
 _DEFAULT_MAX_GITHUB_KEYWORDS = 60
 MAX_GITHUB_KEYWORDS = int(os.environ.get("MAX_GITHUB_KW", _DEFAULT_MAX_GITHUB_KEYWORDS))
+=======
+MAX_GITHUB_KEYWORDS = 6
+>>>>>>> 3eb4acf7275e6e8f4e8ca98412db802b01e0bf38
 
 
 def _build_github_keywords():
