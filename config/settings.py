@@ -1,12 +1,14 @@
 import os
 from itertools import product
 
+##############################################################################################
 # GitHub settings
+##############################################################################################
 # GitHub访问令牌，从环境变量GH_TOKEN获取，默认为空字符串
 GITHUB_TOKEN = os.environ.get("GH_TOKEN", "")
 
-# GitHub搜索中使用的额外术语（中文短语等）
-GITHUB_EXTRA_TERMS = [
+# GitHub搜索中使用的完全由用户自定义的术语
+GITHUB_SEARCH_TERMS = [
     "free v2ray",
     "free vmess",
     "free vless",
@@ -17,7 +19,7 @@ GITHUB_EXTRA_TERMS = [
     "免费代理",
 ]
 
-# GitHub搜索关键词的最大数量限制
+# GitHub搜索关键词的最大数量限制，如果你想快点搜索的话可以调小这个值
 _DEFAULT_MAX_GITHUB_KEYWORDS = 6
 MAX_GITHUB_KEYWORDS = int(os.environ.get("MAX_GITHUB_KW", _DEFAULT_MAX_GITHUB_KEYWORDS))
 
@@ -26,27 +28,20 @@ def _build_github_keywords():
     """
     构建GitHub搜索关键词列表
     
-    完全由用户在 GITHUB_EXTRA_TERMS 中自定义搜索关键词，
-    按顺序去重并裁剪到 MAX_GITHUB_KEYWORDS 个。
+    完全由用户在 GITHUB_SEARCH_TERMS 中自定义搜索关键词，
+    按顺序选取并裁剪到 MAX_GITHUB_KEYWORDS 个。
     
     Returns:
         list: 包含生成的关键词字符串列表，长度不超过MAX_GITHUB_KEYWORDS
     """
-    keywords = []
-    seen = set()
-
-    for kw in GITHUB_EXTRA_TERMS:
-        if len(keywords) >= MAX_GITHUB_KEYWORDS:
-            break
-        if kw and kw not in seen:
-            keywords.append(kw)
-            seen.add(kw)
-
-    return keywords
+    return GITHUB_SEARCH_TERMS[:MAX_GITHUB_KEYWORDS]
 
 
 GITHUB_KEYWORDS = _build_github_keywords()
 
+##############################################################################################
+# Platform settings
+##############################################################################################
 # Platform API keys
 # Hunter.io平台API密钥，从环境变量HUNTER_API_KEY获取，默认为空字符串
 HUNTER_API_KEY = os.environ.get("HUNTER_API_KEY", "")
