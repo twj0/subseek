@@ -9,37 +9,21 @@ GITHUB_TOKEN = os.environ.get("GH_TOKEN", "")
 GITHUB_PROTOCOL_TERMS = [
     "v2ray",
     "clash",
-    "clash meta",
-    "vmess",
-    "vless",
-    "trojan",
-    "ss",
-    "ssr",
-    "hy2",
-    "hysteria2",
-    "hysteria",
 ]
 
 # GitHub搜索中使用的上下文相关术语
 GITHUB_CONTEXT_TERMS = [
     "free",
-    "subscribe",
-    "nodes",
-    "config",
+    "node",
     "proxy",
-    "proxies",
-    "node list",
-    "proxy list",
 ]
 
 # GitHub搜索中使用的额外术语
-GITHUB_EXTRA_TERMS = [
-    "free proxy",
-    "free proxies",
-]
+GITHUB_EXTRA_TERMS = []
 
 # GitHub搜索关键词的最大数量限制
-MAX_GITHUB_KEYWORDS = 60
+_DEFAULT_MAX_GITHUB_KEYWORDS = 60
+MAX_GITHUB_KEYWORDS = int(os.environ.get("MAX_GITHUB_KW", _DEFAULT_MAX_GITHUB_KEYWORDS))
 
 
 def _build_github_keywords():
@@ -56,12 +40,18 @@ def _build_github_keywords():
     
     # 使用 product 生成所有可能的两两组合
     all_terms = GITHUB_PROTOCOL_TERMS + GITHUB_CONTEXT_TERMS
+    unique_keywords = []
+
+    for term in all_terms:
+        if term not in seen:
+            unique_keywords.append(term)
+            seen.add(term)
+
     # 使用 combinations 避免对称组合 (t1, t2) 和 (t2, t1)
     # 这能让我们在有限的关键词数量内探索更多样化的组合
     keyword_iterator = (f"{t1} {t2}" for t1, t2 in combinations(all_terms, 2))
 
     # 过滤掉已经见过的关键词
-    unique_keywords = []
     for kw in keyword_iterator:
         if kw not in seen:
             unique_keywords.append(kw)
@@ -162,6 +152,6 @@ DB_PATH = os.environ.get('DB_PATH', 'data/nodes.db')
 
 # Export paths
 # 导出文件路径
-EXPORT_PATH = "data/sub.txt"
+EXPORT_PATH = os.environ.get("EXPORT_PATH", "data/sub.txt")
 # Base64编码导出文件路径
-EXPORT_BASE64_PATH = "data/sub_base64.txt"
+EXPORT_BASE64_PATH = os.environ.get("EXPORT_BASE64_PATH", "data/sub_base64.txt")

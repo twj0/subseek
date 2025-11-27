@@ -1,16 +1,16 @@
-name: SubSeek GitHub Scraper
+name: SubSeek Platform Scraper
 
 on:
   schedule:
-    # 每天 UTC 0 点（北京时间 8 点）运行一次
-    - cron: "0 0 * * *"
+    # 每天 UTC 0:30（北京时间 8:30）运行一次
+    - cron: "30 0 * * *"
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  scrape_github:
+  scrape_platforms:
     runs-on: ubuntu-latest
 
     steps:
@@ -27,15 +27,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run scraper (GitHub only)
+      - name: Run scraper (platforms only)
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           HUNTER_API_KEY: ${{ secrets.HUNTER_API_KEY }}
           QUAKE_API_KEY: ${{ secrets.QUAKE_API_KEY }}
-          RUN_GITHUB: "1"
-          RUN_PLATFORMS: "0"
-          EXPORT_PATH: "data/sub_github.txt"
-          EXPORT_BASE64_PATH: "data/sub_github_base64.txt"
+          RUN_GITHUB: "0"
+          RUN_PLATFORMS: "1"
+          EXPORT_PATH: "data/sub_platform.txt"
+          EXPORT_BASE64_PATH: "data/sub_platform_base64.txt"
         run: python main.py
 
       - name: Commit updated subscription files
@@ -44,10 +44,10 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/sub_github.txt data/sub_github_base64.txt || true
+          git add data/sub_platform.txt data/sub_platform_base64.txt || true
           if git diff --cached --quiet; then
             echo "No changes to commit."
             exit 0
           fi
-          git commit -m "chore: update subscriptions [skip ci]"
+          git commit -m "chore: update platform subscriptions [skip ci]"
           git push
