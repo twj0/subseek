@@ -8,5 +8,6 @@ dependencies = [
     "requests",
     "sqlalchemy",
     "pyyaml",
-    "ddgs"
+    "ddgs",
+    "openai>=2.8.1",
 ]

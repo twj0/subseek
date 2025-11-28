@@ -1,3 +1,11 @@
+"""
+Subscription exporter module.
+
+This module handles exporting proxy nodes to subscription files in various formats,
+including plain text and base64 encoded versions. It organizes nodes by source
+and creates both combined and date-based exports.
+"""
+
 import base64
 import os
 from datetime import datetime
@@ -6,21 +14,34 @@ from config.settings import EXPORT_PATH, EXPORT_BASE64_PATH
 
 
 def _write_nodes_to_file(nodes, path):
-    """Write given nodes' links to a text file, one per line."""
+    """
+    Write given nodes' links to a text file, one per line.
+    
+    Args:
+        nodes (list): List of ProxyNode objects to write to file
+        path (str): Path to the output file
+    """
+    # 检查路径是否为空，如果为空则直接返回
     if not path:
         return
+    # 获取文件所在目录
     directory = os.path.dirname(path)
+    # 如果目录不为空，则创建目录（如果目录不存在）
     if directory:
         os.makedirs(directory, exist_ok=True)
+    # 以写入模式打开文件，使用UTF-8编码
     with open(path, "w", encoding="utf-8") as f:
+        # 遍历所有节点
         for node in nodes:
+            # 如果节点存在链接，则将链接写入文件
             if node.link:
                 f.write(node.link.strip() + "\n")
 
 
 def export_subscription(output_path=None, base64_output_path=None, limit=None):
-    """Export collected nodes to subscription files.
-
+    """
+    Export collected nodes to subscription files.
+    
     Behavior:
     - Always export a combined file (all nodes) to EXPORT_PATH (or output_path argument).
     - Additionally, create date-based copies under data/YYYY/MM/DD/ using the same
@@ -31,12 +52,21 @@ def export_subscription(output_path=None, base64_output_path=None, limit=None):
       Each of these also has a date-based copy under the same date directory.
     - Base64 export still uses EXPORT_BASE64_PATH (or base64_output_path)
       for the latest combined file.
+      
+    Args:
+        output_path (str, optional): Path to export combined nodes file. 
+                                     Defaults to EXPORT_PATH.
+        base64_output_path (str, optional): Path to export base64 encoded file.
+                                            Defaults to EXPORT_BASE64_PATH.
+        limit (int, optional): Maximum number of nodes to export.
+                               If None, all nodes are exported.
     """
     output_path = output_path or EXPORT_PATH
     base64_output_path = base64_output_path or EXPORT_BASE64_PATH
 
     session = Session()
     try:
+        # Query nodes ordered by creation time (newest first)
         query = session.query(ProxyNode).order_by(ProxyNode.created_at.desc())
         if limit:
             nodes = query.limit(limit).all()

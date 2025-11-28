@@ -1,3 +1,9 @@
+"""
+GitHub仓库收集器模块
+
+该模块提供了从GitHub搜索和获取订阅相关仓库文件内容的功能。
+"""
+
 import requests
 import time
 from config.settings import GITHUB_TOKEN, GITHUB_KEYWORDS
@@ -8,6 +14,15 @@ HEADERS = {
 }
 
 def get_github_repos():
+    """
+    根据配置的关键字搜索GitHub仓库
+    
+    通过GitHub API搜索与配置关键字相关的仓库，并返回仓库全名列表。
+    搜索按照更新时间降序排列，每页最多50个结果。
+    
+    Returns:
+        list: 包含仓库全名的去重列表，格式为 'owner/repo_name'
+    """
     repos = []
     for keyword in GITHUB_KEYWORDS:
         # 搜索仓库的语法
@@ -16,9 +31,9 @@ def get_github_repos():
         # sort: 按照更新时间排序
         # order: 降序
         # per_page: 每页显示的仓库数量
-        url = f"https://api.github.com/search/repositories?q={keyword}&sort=updated&order=desc&per_page=100"
+        url = f"https://api.github.com/search/repositories?q={keyword}&sort=updated&order=desc&per_page=50"
         try:
-            resp = requests.get(url, headers=HEADERS)
+            resp = requests.get(url, headers=HEADERS, timeout=10)
             if resp.status_code == 200:
                 items = resp.json().get("items", [])
                 #print(items)
@@ -32,6 +47,18 @@ def get_github_repos():
     return list(set(repos))
 
 def fetch_file_content(repo_full_name):
+    """
+    获取指定仓库中可能包含订阅信息的文件内容
+    
+    该函数会尝试在仓库的main和master分支中查找常见订阅文件，
+    并根据文件扩展名和关键词进行筛选。
+    
+    Args:
+        repo_full_name (str): 仓库的全名，格式为 'owner/repo_name'
+        
+    Returns:
+        list: 包含文件内容的字符串列表
+    """
     common_files = ["subscribe/v2ray.txt", "v2ray.txt", "clash.yaml", "config.yaml", "sub.txt", "nodes.txt"]
     exts = (".txt", ".yaml", ".yml", ".json", ".conf")
     keywords = ("v2ray", "clash", "sub", "nodes", "proxy")

@@ -4,8 +4,13 @@ import time
 from config.settings import HUNTER_API_KEY, QUAKE_API_KEY
 
 class HunterSearcher:
+    """
+    Hunter搜索平台的搜索器类
+    
+    该类封装了对Hunter平台API的调用，支持通过API密钥进行身份验证，
+    并能执行基于查询条件的搜索操作。
+    """
     def __init__(self, api_key=None):
-
         """
         初始化HunterSearcher类
         :param api_key: Hunter API的密钥，如果未提供则使用默认的HUNTER_API_KEY
@@ -14,6 +19,13 @@ class HunterSearcher:
         self.base_url = "https://hunter.qianxin.com/openApi/search"  # 设置API的基础URL
 
     def search(self, query, page_size=20):
+        """
+        在Hunter平台上执行搜索
+        
+        :param query: 搜索查询语句
+        :param page_size: 每页返回的结果数量，默认为20
+        :return: 包含搜索结果URL的列表
+        """
         if not self.api_key:
             return []
 
@@ -34,6 +46,12 @@ class HunterSearcher:
             return []
 
 class QuakeSearcher:
+    """
+    Quake搜索平台的搜索器类
+    
+    该类封装了对Quake平台API的调用，支持通过API密钥进行身份验证，
+    并能执行基于查询条件的搜索操作。
+    """
     def __init__(self, api_key=None):
 
         """
@@ -44,6 +62,13 @@ class QuakeSearcher:
         self.base_url = "https://quake.360.net/api/v3/search/quake_service"  # 设置API基础URL
 
     def search(self, query, size=20):
+        """
+        在Quake平台上执行搜索
+        
+        :param query: 搜索查询语句
+        :param size: 返回结果的数量，默认为20
+        :return: 包含搜索结果URL的列表
+        """
         if not self.api_key:
             return []
 
@@ -94,6 +119,12 @@ class DDGSearcher:
             return []
 
 def search_all_platforms(keywords):
+    """
+    在所有平台(Hunter、Quake、DuckDuckGo)上搜索关键字
+    
+    :param keywords: 要搜索的关键字列表
+    :return: 所有平台搜索结果去重后的URL列表
+    """
     urls = []
     hunter = HunterSearcher()
     quake = QuakeSearcher()
@@ -108,7 +139,7 @@ def search_all_platforms(keywords):
         urls.extend(quake.search(quake_query))
         time.sleep(1)
         ddg_query = f'"{keyword}" (vmess OR vless OR trojan OR ss)'
-        urls.extend(ddg.search(ddg_query, max_results=10))
+        urls.extend(ddg.search(ddg_query, max_results=20))
         time.sleep(2)
 
     return list(set(urls))  # 返回去重后的结果列表
