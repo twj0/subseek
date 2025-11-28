@@ -31,7 +31,7 @@ def get_github_repos():
         # sort: 按照更新时间排序
         # order: 降序
         # per_page: 每页显示的仓库数量
-        url = f"https://api.github.com/search/repositories?q={keyword}&sort=updated&order=desc&per_page=50"
+        url = f"https://api.github.com/search/repositories?q={keyword}&sort=updated&order=desc&per_page=30"
         try:
             resp = requests.get(url, headers=HEADERS, timeout=10)
             if resp.status_code == 200:
