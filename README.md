@@ -7,6 +7,6 @@
 ---
 
 神秘文件：
-  ```
-  [https://github.com/twj0/subseek/blob/master/config/settings.py](https://raw.githubusercontent.com/twj0/subseek/refs/heads/master/data/sub_platform.txt)
-  ```
+```
+https://raw.githubusercontent.com/twj0/subseek/refs/heads/master/data/sub_platform.txt
+```
