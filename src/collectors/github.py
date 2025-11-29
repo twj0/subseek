@@ -16,11 +16,11 @@ HEADERS = {
 
 # GitHub API speed settings (configurable via environment variables)
 # GitHub搜索每页返回的仓库数量，默认30
-GITHUB_PER_PAGE = int(os.environ.get("GITHUB_PER_PAGE", 30))
+GITHUB_PER_PAGE = int(os.environ.get("GH_PER_PAGE", 30))
 # GitHub API请求间隔时间（秒），默认2秒，避免触发速率限制
-GITHUB_SLEEP_INTERVAL = float(os.environ.get("GITHUB_SLEEP_INTERVAL", 2))
+GITHUB_SLEEP_INTERVAL = float(os.environ.get("GH_SLEEP_INTERVAL", 2))
 # GitHub API请求超时时间（秒），默认10秒
-GITHUB_REQUEST_TIMEOUT = int(os.environ.get("GITHUB_REQUEST_TIMEOUT", 10))
+GITHUB_REQUEST_TIMEOUT = int(os.environ.get("GH_REQUEST_TIMEOUT", 10))
 
 def get_github_repos():
     """

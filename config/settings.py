@@ -8,10 +8,10 @@ from itertools import product
 GITHUB_TOKEN = os.environ.get("GH_TOKEN", "")
 
 # GitHub搜索中使用的完全由用户自定义的术语
-# 可通过环境变量 GITHUB_SEARCH_TERMS 覆盖，多个关键词用逗号分隔
-# 例如: GITHUB_SEARCH_TERMS="free v2ray,free proxy"
+# 可通过环境变量 GH_SEARCH_TERMS 覆盖，多个关键词用逗号分隔
+# 例如: GH_SEARCH_TERMS="free v2ray,free proxy"
 _DEFAULT_GITHUB_SEARCH_TERMS = ["free v2ray", "free proxy"]
-_env_search_terms = os.environ.get("GITHUB_SEARCH_TERMS", "")
+_env_search_terms = os.environ.get("GH_SEARCH_TERMS", "")
 GITHUB_SEARCH_TERMS = (
     [term.strip() for term in _env_search_terms.split(",") if term.strip()]
     if _env_search_terms
@@ -19,9 +19,9 @@ GITHUB_SEARCH_TERMS = (
 )
 
 # GitHub搜索关键词的最大数量限制，如果你想快点搜索的话可以调小这个值
-# 可通过环境变量 MAX_GITHUB_KW 覆盖
+# 可通过环境变量 MAX_GH_KW 覆盖
 _DEFAULT_MAX_GITHUB_KEYWORDS = 2
-MAX_GITHUB_KEYWORDS = int(os.environ.get("MAX_GITHUB_KW", _DEFAULT_MAX_GITHUB_KEYWORDS))
+MAX_GITHUB_KEYWORDS = int(os.environ.get("MAX_GH_KW", _DEFAULT_MAX_GITHUB_KEYWORDS))
 
 
 def _build_github_keywords():
