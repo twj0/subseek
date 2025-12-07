@@ -29,13 +29,27 @@ jobs:
 
       - name: Run scraper (GitHub only)
         env:
+          # 必需：GitHub访问令牌（在仓库Settings > Secrets and variables > Actions > Secrets中配置）
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          # 可选：网络映射平台API密钥（在Secrets中配置）
           HUNTER_API_KEY: ${{ secrets.HUNTER_API_KEY }}
           QUAKE_API_KEY: ${{ secrets.QUAKE_API_KEY }}
-          RUN_GITHUB: "1"
-          RUN_PLATFORMS: "0"
-          EXPORT_PATH: "data/sub_github.txt"
-          EXPORT_BASE64_PATH: "data/sub_github_base64.txt"
+          # 运行模块开关（在Variables中配置，默认值：1和0）
+          RUN_GITHUB: ${{ vars.RUN_GITHUB || '1' }}
+          RUN_PLATFORMS: ${{ vars.RUN_PLATFORMS || '0' }}
+          # 线程池工作线程数（在Variables中配置，默认值：8）
+          MAX_WORKERS: ${{ vars.MAX_WORKERS || '8' }}
+          # GitHub搜索关键词（在Variables中配置，默认值：free v2ray,free proxy）
+          GH_SEARCH_TERMS: ${{ vars.GH_SEARCH_TERMS || 'free v2ray,free proxy' }}
+          # GitHub搜索关键词数量限制（在Variables中配置，默认值：2）
+          MAX_GH_KW: ${{ vars.MAX_GH_KW || '2' }}
+          # GitHub搜索仓库总数量限制（在Variables中配置，默认值：100）
+          GH_MAX_REPOS: ${{ vars.GH_MAX_REPOS || '100' }}
+          # GitHub每页返回仓库数量（在Variables中配置，默认值：30）
+          GH_PER_PAGE: ${{ vars.GH_PER_PAGE || '30' }}
+          # 导出文件路径（在Variables中配置，默认值：data/sub_github.txt）
+          EXPORT_PATH: ${{ vars.EXPORT_PATH || 'data/sub_github.txt' }}
+          EXPORT_BASE64_PATH: ${{ vars.EXPORT_BASE64_PATH || 'data/sub_github_base64.txt' }}
         run: python main.py
 
       - name: Commit updated subscription files

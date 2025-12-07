@@ -17,6 +17,8 @@ HEADERS = {
 # GitHub API speed settings (configurable via environment variables)
 # GitHub搜索每页返回的仓库数量，默认30
 GITHUB_PER_PAGE = int(os.environ.get("GH_PER_PAGE", 30))
+# GitHub搜索仓库总数量限制，默认100
+GITHUB_MAX_REPOS = int(os.environ.get("GH_MAX_REPOS", 100))
 # GitHub API请求间隔时间（秒），默认2秒，避免触发速率限制
 GITHUB_SLEEP_INTERVAL = float(os.environ.get("GH_SLEEP_INTERVAL", 2))
 # GitHub API请求超时时间（秒），默认10秒
@@ -25,27 +27,20 @@ GITHUB_REQUEST_TIMEOUT = int(os.environ.get("GH_REQUEST_TIMEOUT", 10))
 def get_github_repos():
     """
     根据配置的关键字搜索GitHub仓库
-    
+
     通过GitHub API搜索与配置关键字相关的仓库，并返回仓库全名列表。
     搜索按照更新时间降序排列，每页最多50个结果。
-    
+
     Returns:
         list: 包含仓库全名的去重列表，格式为 'owner/repo_name'
     """
     repos = []
     for keyword in GITHUB_KEYWORDS:
-        # 搜索仓库的语法
-        # q: 搜索关键词
-        # q=keyword: 搜索关键词
-        # sort: 按照更新时间排序
-        # order: 降序
-        # per_page: 每页显示的仓库数量
         url = f"https://api.github.com/search/repositories?q={keyword}&sort=updated&order=desc&per_page={GITHUB_PER_PAGE}"
         try:
             resp = requests.get(url, headers=HEADERS, timeout=GITHUB_REQUEST_TIMEOUT)
             if resp.status_code == 200:
                 items = resp.json().get("items", [])
-                #print(items)
                 for item in items:
                     repos.append(item['full_name'])
             else:
@@ -53,7 +48,8 @@ def get_github_repos():
         except Exception as e:
             print(f"Exception searching {keyword}: {e}")
         time.sleep(GITHUB_SLEEP_INTERVAL)
-    return list(set(repos))
+    repos = list(set(repos))
+    return repos[:GITHUB_MAX_REPOS]
 
 def fetch_file_content(repo_full_name):
     """

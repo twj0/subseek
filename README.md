@@ -25,7 +25,35 @@ SubSeek 的工作流程分为以下几个主要步骤：
 
 ## 安装与使用
 
-### 使用Docker（推荐）
+### GitHub Actions 自动运行（推荐）
+
+项目已配置 GitHub Actions 每日自动运行。配置步骤：
+
+#### 1. 配置 Secrets（必需）
+进入仓库 **Settings > Secrets and variables > Actions > Secrets**，点击 **New repository secret** 添加：
+
+| Secret 名称 | 说明 | 必需 |
+|------------|------|------|
+| `GH_TOKEN` | GitHub 个人访问令牌 | ✅ 是 |
+| `HUNTER_API_KEY` | Hunter 平台 API 密钥 | ❌ 否 |
+| `QUAKE_API_KEY` | Quake 平台 API 密钥 | ❌ 否 |
+
+#### 2. 配置 Variables（可选）
+进入仓库 **Settings > Secrets and variables > Actions > Variables**，点击 **New repository variable** 添加：
+
+| Variable 名称 | 默认值 | 说明 | 建议值 |
+|--------------|--------|------|--------|
+| `MAX_WORKERS` | 8 | 并发线程数 | 4-16 |
+| `GH_SEARCH_TERMS` | free v2ray,free proxy | GitHub 搜索关键词（逗号分隔） | 自定义 |
+| `MAX_GH_KW` | 2 | 使用的关键词数量 | 2-5 |
+| `GH_MAX_REPOS` | 100 | 搜索仓库总数量 | 50-200 |
+| `GH_PER_PAGE` | 30 | 每页返回仓库数量 | 30-100 |
+| `RUN_GITHUB` | 1 | 是否运行 GitHub 收集 | 0 或 1 |
+| `RUN_PLATFORMS` | 0 | 是否运行平台搜索 | 0 或 1 |
+
+**注意**：不配置 Variables 时，将使用默认值。
+
+### 使用Docker（本地运行）
 
 1. 复制环境变量配置文件：
 ```bash
@@ -68,11 +96,12 @@ python -m src.main
 | 变量名 | 必需 | 默认值 | 说明 |
 |--------|------|--------|------|
 | `GH_TOKEN` | 推荐 | 无 | GitHub个人访问令牌，用于提高API请求限制 |
-| `GITHUB_SEARCH_TERMS` | 否 | "free v2ray,free proxy" | GitHub搜索关键词，多个用逗号分隔 |
-| `MAX_GITHUB_KW` | 否 | 2 | GitHub搜索关键词最大使用数量 |
-| `GITHUB_PER_PAGE` | 否 | 30 | GitHub搜索每页返回的仓库数量（最大100） |
-| `GITHUB_SLEEP_INTERVAL` | 否 | 2 | GitHub API请求间隔时间（秒） |
-| `GITHUB_REQUEST_TIMEOUT` | 否 | 10 | GitHub API请求超时时间（秒） |
+| `GH_SEARCH_TERMS` | 否 | "free v2ray,free proxy" | GitHub搜索关键词，多个用逗号分隔 |
+| `MAX_GH_KW` | 否 | 2 | GitHub搜索关键词最大使用数量（建议：2-5） |
+| `GH_MAX_REPOS` | 否 | 100 | GitHub搜索仓库总数量限制（建议：50-200） |
+| `GH_PER_PAGE` | 否 | 30 | GitHub搜索每页返回的仓库数量（最大100） |
+| `GH_SLEEP_INTERVAL` | 否 | 2 | GitHub API请求间隔时间（秒） |
+| `GH_REQUEST_TIMEOUT` | 否 | 10 | GitHub API请求超时时间（秒） |
 
 ### 平台搜索相关配置
 
