@@ -34,11 +34,17 @@ SubSeek 的工作流程分为以下几个主要步骤：
 4. **节点验证**：测试节点的连通性，只保存可用的节点
 5. **导出订阅**：将收集的节点导出为订阅文件
 
+---
+
 ## 安装与使用
 
-### GitHub Actions 自动运行（推荐）
+### 一：GitHub Actions 自动运行
+> 注意GitHub Actions 最大运行时长为6个小时
 
-项目已配置 GitHub Actions 每日自动运行。配置步骤：
+> 项目已配置 GitHub Actions 每日自动运行。
+
+
+**配置步骤：**
 
 #### 1. 配置 Secrets（必需）
 进入仓库 **Settings > Secrets and variables > Actions > Secrets**，点击 **New repository secret** 添加：
@@ -199,21 +205,6 @@ python -m src.main
 - `data/platform/YYYY/MM/DD/sub_platform.txt`：平台来源的按日归档节点，与GitHub归档结构一致
 - `data/YYYY/MM/DD/`：按日期归档的历史订阅文件（所有来源的聚合导出的向后兼容位置）
 
-## 自定义搜索关键词
-
-搜索关键词配置位于 `config/settings.py` 文件中：
-
-1. **GitHub搜索关键词**：
-   ```python
-   _DEFAULT_GITHUB_SEARCH_TERMS = ["free v2ray", "free proxy"]
-   ```
-
-2. **平台搜索关键词**：
-   - 协议术语：`["v2ray", "vmess", "vless", "trojan", "hy2", "clash", "ss"]`
-   - 上下文术语：`["subscribe", "free", "nodes", "config", "proxy"]`
-   - 独立术语：`["shadowsocks", "wireguard"]`
-
-系统会自动组合这些术语生成完整的搜索关键词列表。
 
 ## 常见问题
 
