@@ -111,6 +111,8 @@ docker-compose up -d
 
 **注意**：Docker镜像在每次代码推送时自动构建并发布到GitHub Container Registry (ghcr.io)。
 
+---
+
 ### 本地运行
 
 1. 安装依赖：
