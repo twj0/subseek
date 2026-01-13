@@ -1,0 +1,128 @@
+name: China Proxy Collector
+
+on:
+  schedule:
+    # 每天运行一次，收集中国代理
+    - cron: '0 2 * * *'  # UTC时间 02:00 (北京时间 10:00)
+  workflow_dispatch:
+    # 允许手动触发
+  push:
+    branches: [ main, master ]
+    paths:
+      - 'src/collectors/china_proxies.py'
+      - 'src/utils/proxy_tester.py'
+      - 'src/utils/protocol_converter.py'
+      - 'scripts/china_proxy/**'
+      - '.github/workflows/china-proxy-collector.yml'
+
+concurrency:
+  group: china-proxy-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  collect-china-proxies:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+          
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Create data directory
+      run: |
+        mkdir -p data
+        
+    - name: Run China Proxy Collector
+      env:
+        MAX_WORKERS: 10
+        PROXY_TEST_TIMEOUT: 8
+        MAX_TEST_COUNT: 100
+        CHINA_PROXY_PROTOCOLS: vmess,vless,ss
+      run: |
+        echo "🇨🇳 开始收集中国代理..."
+        python scripts/china_proxy/china_proxy_collector.py
+        
+    - name: Display proxy statistics
+      run: |
+        echo "📊 代理统计信息:"
+        if [ -f "data/china_proxies/china_proxies_stats.json" ]; then
+          python -c "
+import json
+with open('data/china_proxies/china_proxies_stats.json', 'r') as f:
+    stats = json.load(f)
+collection = stats.get('collection', {})
+conversion = stats.get('conversion', {})
+print(f'收集总数: {collection.get(\"total_collected\", 0)}')
+print(f'测试数量: {collection.get(\"tested\", 0)}')
+print(f'可用代理: {collection.get(\"working\", 0)}')
+print(f'成功率: {collection.get(\"success_rate\", 0):.1%}')
+print(f'转换代理: {conversion.get(\"converted\", 0)}')
+print(f'目标协议: {\", \".join(conversion.get(\"target_protocols\", []))}')
+"
+        else
+          echo "没有找到统计文件"
+        fi
+        
+    - name: Upload proxy files
+      uses: actions/upload-artifact@v3
+      with:
+        name: china-proxies
+        path: |
+          data/china_proxies/working_china_proxies.txt
+          data/china_proxies/converted_china_proxies.txt
+          data/china_proxies/china_proxies_stats.json
+          data/china_proxies/china_proxy_config.json
+        retention-days: 7
+        
+    - name: Commit and push proxy files
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        
+        # 添加代理文件到git
+        git add data/china_proxies/working_china_proxies.txt
+        git add data/china_proxies/converted_china_proxies.txt
+        git add data/china_proxies/china_proxies_stats.json
+        git add data/china_proxies/china_proxy_config.json
+        
+        # 检查是否有变化
+        if git diff --staged --quiet; then
+          echo "没有新的代理文件需要提交"
+        else
+          git commit -m "🇨🇳 更新中国代理数据 ($(date +'%Y-%m-%d %H:%M:%S UTC'))"
+          git push
+        fi
+        
+  notify-main-workflow:
+    needs: collect-china-proxies
+    runs-on: ubuntu-latest
+    if: success()
+    
+    steps:
+    - name: Trigger main workflow
+      run: |
+        echo "🇨🇳 中国代理收集完成，主工作流可以使用新的代理数据进行节点测试"
+        echo "可以通过以下方式在主工作流中使用:"
+        echo "1. 设置 USE_CHINA_PROXY=1"
+        echo "2. 主程序会自动读取 data/china_proxy_config.json"
+        echo "3. 节点验证时会使用中国代理进行延迟测试"

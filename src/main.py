@@ -12,7 +12,8 @@ from src.database.models import Session, ProxyNode
 from src.collectors.github import get_github_repos, fetch_file_content
 from src.collectors.platforms import search_all_platforms
 from src.utils.parser import parse_content
-from src.utils.validator import is_node_alive
+from src.utils.validator import is_node_alive_with_china_proxy
+from src.utils.china_proxy_reader import is_china_proxy_enabled, get_china_proxy_stats
 from src.exporters.subscription import export_subscription
 from config.settings import PLATFORM_KEYWORDS
 
@@ -46,7 +47,7 @@ def save_nodes(links, source):
             skipped_existing += 1
             continue
         # 检查节点是否可用
-        if not is_node_alive(link):
+        if not is_node_alive_with_china_proxy(link):
             skipped_dead_or_invalid += 1
             continue
         # 提取协议类型
@@ -178,6 +179,15 @@ def main():
         print("Skipping network mapping platforms.")  # 跳过网络映射平台搜索的提示信息
     platform_end = time.perf_counter()  # 记录平台搜索阶段结束时间
     print(f"Platform phase took {platform_end - platform_start:.2f} seconds.")  # 打印平台搜索阶段耗时
+
+    # 显示中国代理状态
+    if is_china_proxy_enabled():
+        proxy_stats = get_china_proxy_stats()
+        print(f"\n🇨🇳 中国代理状态: 可用 ({proxy_stats.get('working_count', 0)} 个代理)")
+        print(f"代理将用于节点可用性测试，提高检测准确性")
+    else:
+        print(f"\n🇨🇳 中国代理状态: 未启用或无可用代理")
+        print(f"将使用直接连接进行节点可用性测试")
 
     export_start = time.perf_counter()  # 记录导出阶段开始时间
     export_subscription()  # 导出最终的订阅列表

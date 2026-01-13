@@ -1,0 +1,3 @@
+vmess://eyJ2IjoiMiIsInBzIjoiY2hpbmEtcHJveHktNDcuOTYuMjUyLjExMi0xLXZtZXNzIiwiYWRkIjoiNDcuOTYuMjUyLjExMiIsInBvcnQiOiI4MCIsImlkIjoiYjVkYTNhNjAtMTEyYS00ZGY1LWEwNmQtYWUxNTI4Mjc2ZjcxIiwiYWlkIjoiMCIsInNjeSI6ImF1dG8iLCJuZXQiOiJ3cyIsInR5cGUiOiJub25lIiwiaG9zdCI6IiIsInBhdGgiOiIvIiwidGxzIjoidGxzIn0=
+vless://b8f15588-a8b5-4d68-9fcb-06def9ae235a@47.96.252.112:80?type=ws&path=/&host=&tls=tls#china-proxy-47.96.252.112-1-vless
+ss://YWVzLTI1Ni1nY206ZTZmMjlhMTU4OTRiNGIyOQ==@47.96.252.112:80#china-proxy-47.96.252.112-1-ss

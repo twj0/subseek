@@ -1,0 +1,62 @@
+{
+  "timestamp": "2026-01-13T17:28:23.802321",
+  "total_collected": 1,
+  "stats": {
+    "timestamp": "2026-01-13T17:28:23.801801",
+    "working_proxies": [
+      "http://47.96.252.112:80"
+    ],
+    "converted_proxies": [
+      "vmess://eyJ2IjoiMiIsInBzIjoiY2hpbmEtcHJveHktNDcuOTYuMjUyLjExMi0xLXZtZXNzIiwiYWRkIjoiNDcuOTYuMjUyLjExMiIsInBvcnQiOiI4MCIsImlkIjoiYjVkYTNhNjAtMTEyYS00ZGY1LWEwNmQtYWUxNTI4Mjc2ZjcxIiwiYWlkIjoiMCIsInNjeSI6ImF1dG8iLCJuZXQiOiJ3cyIsInR5cGUiOiJub25lIiwiaG9zdCI6IiIsInBhdGgiOiIvIiwidGxzIjoidGxzIn0=",
+      "vless://b8f15588-a8b5-4d68-9fcb-06def9ae235a@47.96.252.112:80?type=ws&path=/&host=&tls=tls#china-proxy-47.96.252.112-1-vless",
+      "ss://YWVzLTI1Ni1nY206ZTZmMjlhMTU4OTRiNGIyOQ==@47.96.252.112:80#china-proxy-47.96.252.112-1-ss"
+    ],
+    "stats": {
+      "collection": {
+        "total_collected": 50,
+        "tested": 50,
+        "working": 1,
+        "success_rate": 0.02
+      },
+      "conversion": {
+        "original_working": 1,
+        "converted": 3,
+        "target_protocols": [
+          "vmess",
+          "vless",
+          "ss"
+        ]
+      },
+      "test_stats": {
+        "total_proxies": 50,
+        "connected_proxies": 1,
+        "working_proxies": 1,
+        "connection_rate": 0.02,
+        "working_rate": 0.02,
+        "avg_response_time": 49.66,
+        "test_stats": {
+          "domestic": {
+            "success": 1,
+            "rate": 0.02
+          },
+          "international": {
+            "success": 1,
+            "rate": 0.02
+          },
+          "baidu": {
+            "success": 1,
+            "rate": 0.02
+          },
+          "github": {
+            "success": 1,
+            "rate": 0.02
+          }
+        },
+        "test_duration": 36.46
+      }
+    }
+  },
+  "proxies": [
+    "http://47.96.252.112:80"
+  ]
+}

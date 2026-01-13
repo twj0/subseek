@@ -1,0 +1,51 @@
+{
+  "timestamp": "2026-01-13T17:28:23.801339",
+  "total_collected": 1,
+  "stats": {
+    "collection": {
+      "total_collected": 50,
+      "tested": 50,
+      "working": 1,
+      "success_rate": 0.02
+    },
+    "conversion": {
+      "original_working": 1,
+      "converted": 3,
+      "target_protocols": [
+        "vmess",
+        "vless",
+        "ss"
+      ]
+    },
+    "test_stats": {
+      "total_proxies": 50,
+      "connected_proxies": 1,
+      "working_proxies": 1,
+      "connection_rate": 0.02,
+      "working_rate": 0.02,
+      "avg_response_time": 49.66,
+      "test_stats": {
+        "domestic": {
+          "success": 1,
+          "rate": 0.02
+        },
+        "international": {
+          "success": 1,
+          "rate": 0.02
+        },
+        "baidu": {
+          "success": 1,
+          "rate": 0.02
+        },
+        "github": {
+          "success": 1,
+          "rate": 0.02
+        }
+      },
+      "test_duration": 36.46
+    }
+  },
+  "proxies": [
+    "http://47.96.252.112:80"
+  ]
+}

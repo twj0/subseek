@@ -15,4 +15,6 @@ __pycache__/
 todo/
 CLAUDE.md
 SNOW.md
-test.py
+test*.py
+CHINA_*.md
+WORKFLOW_INDEPENDENCE.md

@@ -19,10 +19,11 @@ https://raw.githubusercontent.com/twj0/subseek/refs/heads/master/data/sub_platfo
 
 - 从 GitHub 搜索和收集代理节点
 - 从网络映射平台（Hunter、Quake、DuckDuckGo）搜索代理节点
+- **从中国代理源收集HTTP/SOCKS代理并转换为标准协议**
 - 自动验证节点可用性
 - 支持多种代理协议（vmess、vless、trojan、ss等）
 - 导出为标准订阅格式和Base64编码格式
-- 按来源分类导出（GitHub来源和平台来源）
+- 按来源分类导出（GitHub来源、平台来源、中国代理来源）
 
 ## 工作原理
 
@@ -30,9 +31,11 @@ SubSeek 的工作流程分为以下几个主要步骤：
 
 1. **GitHub仓库搜索**：通过GitHub API搜索包含代理节点配置的公开仓库
 2. **平台搜索**：使用网络映射平台API和搜索引擎查找公开的代理节点
-3. **内容解析**：从获取的文本内容中提取代理节点链接
-4. **节点验证**：测试节点的连通性，只保存可用的节点
-5. **导出订阅**：将收集的节点导出为订阅文件
+3. **中国代理收集**：从多个中国代理源收集HTTP/SOCKS代理并测试可用性
+4. **协议转换**：将HTTP代理转换为vmess、vless、trojan、ss等标准协议
+5. **内容解析**：从获取的文本内容中提取代理节点链接
+6. **节点验证**：测试节点的连通性，只保存可用的节点
+7. **导出订阅**：将收集的节点导出为订阅文件
 
 ---
 
@@ -60,13 +63,16 @@ SubSeek 的工作流程分为以下几个主要步骤：
 
 | Variable 名称 | 默认值 | 说明 | 建议值 |
 |--------------|--------|------|--------|
+| `RUN_GITHUB` | 1 | 是否运行 GitHub 收集 | 0 或 1 |
+| `RUN_PLATFORMS` | 0 | 是否运行平台搜索 | 0 或 1 |
+| `RUN_CHINA_PROXIES` | 1 | 是否运行中国代理收集 | 0 或 1 |
 | `MAX_WORKERS` | 8 | 并发线程数 | 4-16 |
 | `GH_SEARCH_TERMS` | free v2ray,free proxy | GitHub 搜索关键词（逗号分隔） | 自定义 |
 | `MAX_GH_KW` | 2 | 使用的关键词数量 | 2-5 |
 | `GH_MAX_REPOS` | 100 | 搜索仓库总数量 | 50-200 |
 | `GH_PER_PAGE` | 30 | 每页返回仓库数量 | 30-100 |
-| `RUN_GITHUB` | 1 | 是否运行 GitHub 收集 | 0 或 1 |
-| `RUN_PLATFORMS` | 0 | 是否运行平台搜索 | 0 或 1 |
+| `PROXY_TEST_TIMEOUT` | 10 | 代理测试超时时间（秒） | 5-15 |
+| `CHINA_PROXY_PROTOCOLS` | vmess,vless,ss | 中国代理转换目标协议 | 自定义 |
 
 **注意**：不配置 Variables 时，将使用默认值。
 
@@ -158,7 +164,15 @@ python -m src.main
 |--------|------|--------|------|
 | `RUN_GITHUB` | 否 | 1 | 是否运行GitHub收集模块（1启用，0禁用） |
 | `RUN_PLATFORMS` | 否 | 1 | 是否运行平台搜索模块（1启用，0禁用） |
+| `RUN_CHINA_PROXIES` | 否 | 1 | 是否运行中国代理收集模块（1启用，0禁用） |
 | `MAX_WORKERS` | 否 | 8 | 并发处理的最大线程数（建议：4-16） |
+
+### 中国代理配置
+
+| 变量名 | 必需 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `PROXY_TEST_TIMEOUT` | 否 | 10 | 代理测试超时时间（秒，建议：5-15） |
+| `CHINA_PROXY_PROTOCOLS` | 否 | vmess,vless,ss | 中国代理转换目标协议（逗号分隔） |
 
 ### 导出配置
 
@@ -198,6 +212,13 @@ python -m src.main
    - 建立TCP连接测试节点可用性
    - 只保存可用的节点到数据库
 
+### 中国代理收集原理
+
+1. **多源收集**：从GitHub仓库、API端点、免费代理网站收集HTTP/SOCKS代理
+2. **中国识别**：通过国家代码、IP段匹配、地理位置信息识别中国代理
+3. **可用性测试**：测试代理对国内和国际目标的访问能力
+4. **协议转换**：将HTTP代理转换为vmess、vless、trojan、ss等标准协议
+
 ## 输出文件说明
 
 程序运行后会生成以下文件：
@@ -231,6 +252,20 @@ python -m src.main
 - 增加`GITHUB_SLEEP_INTERVAL`以避免被限制
 - 调整搜索关键词，使用更精确的术语
 - 检查网络连接是否正常
+
+### 4. 中国代理相关问题
+
+**Q: 中国代理收集失败怎么办？**
+A: 检查网络连接，确认可以访问GitHub和代理API端点，适当增加超时时间。
+
+**Q: 转换后的代理无法使用？**
+A: 协议转换生成的UUID和密码是随机的，可能需要手动调整配置参数。
+
+**Q: 如何只收集特定协议的代理？**
+A: 设置`CHINA_PROXY_PROTOCOLS`环境变量，如`CHINA_PROXY_PROTOCOLS=vmess`。
+
+**Q: 中国代理数量很少？**
+A: 免费中国代理资源有限，建议结合GitHub和平台搜索一起使用。
 
 
 > *powered by windsurf & chatgpt*
