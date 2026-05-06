@@ -1,0 +1,2 @@
+ss://UUID@server.com:443?allowInsecure=1&type=ws&fragment=tlshello,2-3,10-9)
+vless://UUID@server.com:443?allowInsecure=1&type=ws&fragment=tlshello,2-3,10-9)
